@@ -1,7 +1,7 @@
 import { DialerInput } from "@/components/custom/dialer/DialerInput";
 import { DialerKeyButton } from "@/components/custom/dialer/DialerKeyButton";
 import { DialerKeypad } from "@/components/custom/dialer/DialerKeypad";
-import { ActionButton } from "@/components/custom/phone/ActionButton";
+import { ActionButton } from "@/components/custom/phone/buttons/ActionButton";
 import { PhoneScreen } from "@/components/custom/phone/PhoneScreen";
 import { PhoneProvider } from "./context/phone";
 

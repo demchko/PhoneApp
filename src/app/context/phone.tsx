@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 
 export enum PhoneState{
     IDLE = "IDLE",
@@ -15,6 +15,7 @@ interface StateType {
     setDialerInput: (input: string) => void;
     toggleDialer: () => void;
     switchPhoneState: (state: PhoneState) => void;
+    dialerRef?: React.RefObject<HTMLDivElement>;
 }
 
 const PhoneContext = createContext<StateType>(null as any);
@@ -27,6 +28,7 @@ export function PhoneProvider({children}: PhoneProviderProps){
     const [phoneState, setPhoneState] = useState(PhoneState.IDLE);
     const [dialerOpen, setDialerOpen] = useState(false);
     const [dialerInput, setDialerInput] = useState("");
+    const dialerRef = useRef(null);
 
     const toggleDialer = () => setDialerOpen(!dialerOpen);
     
@@ -44,6 +46,7 @@ export function PhoneProvider({children}: PhoneProviderProps){
         toggleDialer,
         dialerInput,
         setDialerInput,
+        dialerRef,
     }
 
     return (

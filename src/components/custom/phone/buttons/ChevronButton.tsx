@@ -4,9 +4,15 @@ import { ChevronDown } from "lucide-react";
 import { usePhone } from "@/app/context/phone";
 
 export function ChevronButton({...props}: ButtonProps){
-    const {toggleDialer} = usePhone();
+    const {toggleDialer, dialerRef, dialerOpen} = usePhone();
+    const click = () => {
+        toggleDialer();
+        // dialerRef?.current.animate({
+        //     height: dialerOpen ? '100px' : '300px',
+        //   });
+    }
     return (
-        <ActionButton className="bg-black" onClick={toggleDialer} >
+        <ActionButton className="bg-black" onClick={click} >
             <ChevronDown />
         </ActionButton>
     )

@@ -1,5 +1,5 @@
 import { PhoneState, usePhone } from "@/app/context/phone";
-import { DialButton } from "../phone/DialButton";
+import { DialButton } from "../phone/buttons/DialButton";
 import { DialerInput } from "./DialerInput";
 import { DialerKeypad } from "./DialerKeypad";
 
