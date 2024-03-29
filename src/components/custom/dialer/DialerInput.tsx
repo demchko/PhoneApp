@@ -1,16 +1,17 @@
 import { Input } from "@/components/ui/input";
-import { ActionButton } from "../phone/ActionButton";
-import { BackspaceButton } from "../phone/BackspaceButton";
-import { ChevronButton } from "../phone/ChevronButton";
+import { ActionButton } from "../phone/buttons/ActionButton";
+import { BackspaceButton } from "../phone/buttons/BackspaceButton";
+import { ChevronButton } from "../phone/buttons/ChevronButton";
 import { usePhone } from "@/app/context/phone";
 
 export function DialerInput(){
-    const {dialerInput, setDialerInput} = usePhone();
+    const {dialerInput, setDialerInput, dialerRef, dialerOpen} = usePhone();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const filtered = e.target.value.replace(/[^0-9*+#]/g, "");
         setDialerInput(filtered);
     }
+
 
     return (
         <div className="flex justify-between items-center" >

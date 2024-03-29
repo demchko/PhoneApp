@@ -1,7 +1,7 @@
 import { PhoneState, usePhone } from "@/app/context/phone"
-import { DialButton } from "./DialButton";
-import { DeclineButton } from "./DeclineButton";
-import { GripButton } from "./GripButton";
+import { DialButton } from "./buttons/DialButton";
+import { DeclineButton } from "./buttons/DeclineButton";
+import { GripButton } from "./buttons/GripButton";
 
 export function Footer(){
     const {phoneState, dialerOpen, switchPhoneState} = usePhone();

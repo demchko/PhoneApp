@@ -1,6 +1,6 @@
 import { MicOff, Pause, Volume2 } from "lucide-react";
-import { ActionButton } from "./ActionButton";
-import { GripButton } from "./GripButton";
+import { ActionButton } from "./buttons/ActionButton";
+import { GripButton } from "./buttons/GripButton";
 
 export function TalkingPad(){
     return (
