@@ -17,18 +17,6 @@ export function MuteButton(){
         () =>
           currentCall !== null ? (currentCall.isMuted().audio as boolean) : false,
       );
-    
-      const isOnHold = useSyncExternalStore(
-        (callback) => {
-          currentCall?.addListener("hold", callback);
-          currentCall?.addListener("unhold", callback);
-          return () => {
-            currentCall?.removeListener("hold", callback);
-            currentCall?.removeListener("unhold", callback);
-          };
-        },
-        () => (currentCall !== null ? currentCall.isOnHold().local : false),
-      );
 
     return (
         <ActionButton className="bg-black" onClick={() => currentCall?.[isMuted ? "unmute" : "mute"]()} >

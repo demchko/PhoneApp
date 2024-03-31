@@ -2,10 +2,10 @@ import { Input } from "@/components/ui/input";
 import { ActionButton } from "../phone/buttons/ActionButton";
 import { BackspaceButton } from "../phone/buttons/BackspaceButton";
 import { ChevronButton } from "../phone/buttons/ChevronButton";
-import { usePhone } from "@/app/context/phone";
+import { PhoneState, usePhone } from "@/app/context/phone";
 
 export function DialerInput(){
-    const {dialerInput, setDialerInput, dialerRef, dialerOpen} = usePhone();
+    const {dialerInput, setDialerInput} = usePhone();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const filtered = e.target.value.replace(/[^0-9*+#]/g, "");
