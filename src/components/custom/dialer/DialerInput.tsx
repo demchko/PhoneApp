@@ -15,7 +15,6 @@ export function DialerInput(){
 
     return (
         <div className="flex justify-between items-center" >
-            <ChevronButton />
             <Input value={dialerInput} onChange={handleChange} className="text-white text-xl border-none bg-transparent text-center focus:outline-none" placeholder="Enter phone" />
             <BackspaceButton />
         </div>

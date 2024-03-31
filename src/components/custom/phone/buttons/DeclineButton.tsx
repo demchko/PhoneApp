@@ -4,7 +4,7 @@ import { ButtonProps } from "@/components/ui/button";
 
 export function DeclineButton({...props}: ButtonProps){
     return (
-        <ActionButton className="bg-gray-500" {...props} >
+        <ActionButton className="bg-black" {...props} >
             <PhoneOffIcon />
         </ActionButton>
     )
