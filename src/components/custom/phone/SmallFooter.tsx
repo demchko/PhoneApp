@@ -5,24 +5,41 @@ import { MuteButton } from "./buttons/Mute";
 import { GripButton } from "./buttons/GripButton";
 import { RTCSessionEventMap } from "jssip/lib/RTCSession";
 import { CallOptions } from "jssip/lib/UA";
+import dial from "../../../ringtones/dial.mp3";
+
 
 export function SmallFooter(){
-    const {switchPhoneState, removeCall, addCall, dialerInput, userAgent, currentCall, phoneState} = usePhone();
+    const {switchPhoneState, removeCall, addCall, dialerInput, userAgent, currentCall, phoneState, setDialerInput, audioRef} = usePhone();
 
    const eventHandlers: Partial<RTCSessionEventMap> = {
-    progress: () => switchPhoneState(PhoneState.DIALING),
+    progress: () => {
+        switchPhoneState(PhoneState.DIALING)
+        if (audioRef.current) {
+            audioRef.current.src = dial;
+            audioRef.current.play();
+            audioRef.current.loop = true;
+          }
+        setDialerInput("");
+    },
     failed: (e) => {
+      audioRef.current?.pause();
       removeCall();
       switchPhoneState(PhoneState.IDLE);
     },
     ended: (e) => {
+      audioRef?.current?.pause();
       removeCall();
       switchPhoneState(PhoneState.IDLE);
     },
-    accepted: () => {
-      console.log("Call is talking");
-      switchPhoneState(PhoneState.TALKING);
-    },
+    accepted: () => switchPhoneState(PhoneState.TALKING),
+    peerconnection: ({ peerconnection }) => {
+        peerconnection.ontrack = (e) => {
+          if (audioRef.current) {
+            const stream = e.streams[0];
+            audioRef.current.srcObject = stream;
+          }
+        };
+      },
   };
 
   const options: CallOptions = {

@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 import JsSIP from "jssip";
 import { IncomingRTCSessionEvent, UAConfiguration, UnRegisteredEvent } from "jssip/lib/UA";
 import { RTCSession } from "jssip/lib/RTCSession";
+import skype from "../../ringtones/skype.mp3";
 
 // jssip
 const WEBRTC_SERVER_URL = "wss://sip2.mvoice.co.il";
@@ -26,6 +27,7 @@ interface StateType {
     phoneState: PhoneState;
     dialerOpen: boolean;
     dialerInput: string;
+    audioRef: React.RefObject<HTMLAudioElement>;
     setDialerInput: (input: string) => void;
     toggleDialer: () => void;
     switchPhoneState: (state: PhoneState) => void;
@@ -60,6 +62,8 @@ export function PhoneProvider({children}: PhoneProviderProps){
     const addCall = (call: RTCSession) => setCurrentCall(call);
     const removeCall = () => setCurrentCall(null);
 
+    const audioRef = useRef<HTMLAudioElement>(null);
+
     // states local
     const [floatingButton, setFloatingButton] = useState(true);
     const [floatingSmallPhone, setFloatingSmallPhone] = useState(false);
@@ -80,32 +84,6 @@ export function PhoneProvider({children}: PhoneProviderProps){
     }
 
     useEffect(() => {
-        // 1. Attach event listeners to userAgent
-    
-        userAgent.on("connecting", () => {
-          console.log("userAgent connecting...");
-        });
-    
-        userAgent.on("connected", () => {
-          console.log("userAgent connected!!");
-        });
-    
-        userAgent.on("disconnected", (e) => {
-          console.log("userAgent disconnected :-(. Code: " + e.code);
-        });
-    
-        userAgent.on("registered", () => {
-          console.log("userAgent registered");
-        });
-    
-        userAgent.on("unregistered", (e) => {
-          console.log("userAgent unregistered", e.cause);
-        });
-    
-        userAgent.on("registrationFailed", (e: UnRegisteredEvent) => {
-          console.log("userAgent registration failed...", e.cause);
-        });
-
         //incoming call
         userAgent.on(
             "newRTCSession",
@@ -121,18 +99,33 @@ export function PhoneProvider({children}: PhoneProviderProps){
                 console.log("call is in progress");
                 switchPhoneState(PhoneState.RINGING);
                 setFloatingSmallPhone(true);
+                if (audioRef.current) {
+                  audioRef.current.src = skype;
+                  audioRef.current.play();
+                  audioRef.current.loop = true;
+                }
               });
       
               session.on("failed", (e) => {
+                audioRef.current?.pause();
                 removeCall();
                 switchPhoneState(PhoneState.IDLE);
               });
       
               session.on("ended", (e) => {
+                audioRef.current?.pause();
                 removeCall();
                 switchPhoneState(PhoneState.IDLE);
               });
-              session.on("accepted", () => switchPhoneState(PhoneState.TALKING))
+              session.on("accepted", () => switchPhoneState(PhoneState.TALKING)),
+              session.on("peerconnection", ({ peerconnection }) => {
+                peerconnection.ontrack = (e) => {
+                  if (audioRef.current) {
+                    const stream = e.streams[0];
+                    audioRef.current.srcObject = stream;
+                  }
+                };
+              });
             },
           );
 
@@ -160,7 +153,8 @@ export function PhoneProvider({children}: PhoneProviderProps){
         floatingButton,
         floatingSmallPhone,
         toggleFloatingButton,
-        toggleFloatingSmallPhone
+        toggleFloatingSmallPhone,
+        audioRef
     }
 
     return (
